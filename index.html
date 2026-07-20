@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TNJ Comprovantes - tvnovajuarez</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        tnj: { azul:'#1a237e', dourado:'#ffc107', escuro:'#0a0a0a', verde:'#059669', vermelho:'#dc2626' }
+                    },
+                    fontFamily: { principal: ['Arial', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body{font-family:Arial,sans-serif;background:#111}
+        .comprovante{background:#fff;color:#111;font-family:Arial}
+        @media print{.no-print{display:none}}
+    </style>
+</head>
+<body class="bg-tnj-escuro text-white font-principal min-h-screen py-6">
+
+<div class="container mx-auto px-3 max-w-4xl">
+    <header class="text-center mb-6">
+        <h1 class="text-2xl md:text-3xl font-black text-tnj-dourado">🧾 TNJ COMPROVANTES</h1>
+        <p class="text-sm opacity-80">tvnovajuarez - Rafael Edgley Alves Feliciano</p>
+    </header>
+
+    <div class="grid md:grid-cols-2 gap-6">
+        <!-- FORMULÁRIO DE PREENCHIMENTO -->
+        <div class="bg-gray-800/60 p-5 rounded-lg border border-gray-700 no-print">
+            <h3 class="font-bold text-tnj-dourado mb-4 text-lg">📝 DADOS DO COMPROVANTE</h3>
+
+            <div class="space-y-3">
+                <div class="flex gap-2">
+                    <button onclick="mudarStatus('pago')" id="btnPago" class="flex-1 py-2 rounded font-bold bg-tnj-verde text-white">✅ JÁ PAGO</button>
+                    <button onclick="mudarStatus('pendente')" id="btnPendente" class="flex-1 py-2 rounded font-bold bg-gray-600">⏳ NÃO PAGO</button>
+                </div>
+
+                <hr class="border-gray-700 my-2">
+
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="text" id="nomeCli" placeholder="Nome" class="p-2 rounded bg-gray-900 border border-gray-600">
+                    <input type="text" id="sobreCli" placeholder="Sobrenome" class="p-2 rounded bg-gray-900 border border-gray-600">
+                </div>
+                <input type="email" id="emailCli" placeholder="E-mail" class="w-full p-2 rounded bg-gray-900 border border-gray-600">
+                <input type="text" id="foneCli" placeholder="Telefone / WhatsApp" class="w-full p-2 rounded bg-gray-900 border border-gray-600">
+                
+                <div class="grid grid-cols-3 gap-2">
+                    <input type="text" id="cidadeCli" placeholder="Cidade" class="col-span-2 p-2 rounded bg-gray-900 border border-gray-600">
+                    <input type="text" id="estadoCli" placeholder="UF" maxlength="2" class="p-2 rounded bg-gray-900 border border-gray-600">
+                </div>
+                <input type="text" id="numCasa" placeholder="Número / Complemento" class="w-full p-2 rounded bg-gray-900 border border-gray-600">
+
+                <select id="servico" class="w-full p-2 rounded bg-gray-900 border border-gray-600">
+                    <option value="">Escolha o Serviço Contratado</option>
+                    <option>Serviços IPTV</option>
+                    <option>Serviços TV Nova Juarez</option>
+                    <option>Serviços Vídeos e Fotos Artes</option>
+                    <option>Serviços Divulgações</option>
+                    <option>Serviços Programa na TV</option>
+                    <option>Serviços Comerciais</option>
+                </select>
+                <input type="text" id="planoCli" placeholder="Seu Plano / Descrição" class="w-full p-2 rounded bg-gray-900 border border-gray-600">
+                <input type="text" id="valor" placeholder="Valor R$ 0,00" class="w-full p-2 rounded bg-gray-900 border border-gray-600 text-lg font-bold">
+
+                <hr class="border-gray-700 my-2">
+
+                <button onclick="gerarComprovante()" class="w-full py-3 bg-tnj-dourado text-black font-bold rounded text-lg hover:brightness-110">
+                    🖼️ GERAR COMPROVANTE
+                </button>
+                <button onclick="baixarImagem()" class="w-full py-2 bg-tnj-azul rounded font-bold hover:bg-tnj-claro">
+                    ⬇️ BAIXAR FOTO PARA WHATSAPP
+                </button>
+                <button onclick="enviarWhats()" class="w-full py-2 bg-green-700 rounded font-bold hover:bg-green-600">
+                    💬 ABRIR NO WHATSAPP
+                </button>
+            </div>
+        </div>
+
+        <!-- ÁREA DO COMPROVANTE PRONTO -->
+        <div>
+            <h3 class="font-bold text-tnj-dourado mb-4 text-lg text-center">👁️ PRÉ-VISUALIZAÇÃO</h3>
+            
+            <div id="areaComprovante" class="comprovante w-full max-w-[380px] mx-auto rounded-xl overflow-hidden shadow-2xl">
+                <!-- CABEÇALHO -->
+                <div class="bg-gradient-to-r from-tnj-azul to-tnj-claro text-white p-4 text-center">
+                    <h2 class="text-xl font-black">SUA FATURA DA TVNOVAJUAREZ</h2>
+                    <p class="text-xs opacity-90">TNJ COMPROVANTES</p>
+                </div>
+
+                <!-- STATUS -->
+                <div id="faixaStatus" class="text-center py-3 font-black text-xl text-white bg-tnj-verde">
+                    ✅ PAGAMENTO CONFIRMADO
+                </div>
+
+                <!-- DADOS BANCÁRIOS -->
+                <div class="bg-gray-50 p-3 text-xs border-b">
+                    <p class="font-bold text-tnj-azul">📌 DADOS PARA PAGAMENTO</p>
+                    <p>Banco: PagBank</p>
+                    <p>Pix: <strong>tvnovajuarez2023@gmail.com</strong></p>
+                    <p>Nome: Rafael Edgley Alves Feliciano</p>
+                    <p>Empresa: TV Nova Juarez</p>
+                </div>
+
+                <!-- DADOS DO CLIENTE -->
+                <div class="p-4 text-sm space-y-1">
+                    <p class="font-bold border-b pb-1">👤 DADOS DO CLIENTE</p>
+                    <p>Nome: <span id="mostraNome">-</span> <span id="mostraSobre">-</span></p>
+                    <p>E-mail: <span id="mostraEmail">-</span></p>
+                    <p>Telefone: <span id="mostraFone">-</span></p>
+                    <p>Endereço: <span id="mostraCid">-</span>/<span id="mostraEst">-</span>, Nº <span id="mostraNum">-</span></p>
+
+                    <p class="font-bold border-b pb-1 mt-3">📋 SERVIÇO CONTRATADO</p>
+                    <p>Serviço: <span id="mostraServico">-</span></p>
+                    <p>Plano: <span id="mostraPlano">-</span></p>
+
+                    <div class="mt-4 text-center">
+                        <p class="text-xs">Valor Total</p>
+                        <p id="mostraValor" class="text-2xl font-black text-tnj-azul">R$ 0,00</p>
+                    </div>
+
+                    <div class="mt-4 pt-2 border-t text-center text-xs opacity-70">
+                        <p>Emitido em: <strong id="dataHora"></strong></p>
+                        <p>TNJ COMPROVANTES • tvnovajuarez</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MENSAGEM AUTOMÁTICA -->
+            <div id="msgAutomatica" class="mt-4 bg-gray-800 p-3 rounded text-xs hidden no-print">
+                <p class="font-bold text-tnj-dourado mb-1">📤 MENSAGEM PRONTA:</p>
+                <textarea id="textoMsg" class="w-full h-28 p-2 rounded bg-gray-900 text-white border border-gray-700 resize-none"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let tipoStatus = 'pago';
+
+// ALTERA ENTRE PAGO E PENDENTE
+function mudarStatus(tipo){
+    tipoStatus = tipo;
+    const faixa = document.getElementById('faixaStatus');
+    const btnP = document.getElementById('btnPago');
+    const btnPe = document.getElementById('btnPendente');
+
+    if(tipo==='pago'){
+        faixa.className = 'text-center py-3 font-black text-xl text-white bg-tnj-verde';
+        faixa.innerHTML = '✅ PAGAMENTO CONFIRMADO';
+        btnP.className = 'flex-1 py-2 rounded font-bold bg-tnj-verde text-white';
+        btnPe.className = 'flex-1 py-2 rounded font-bold bg-gray-600';
+    }else{
+        faixa.className = 'text-center py-3 font-black text-xl text-white bg-tnj-vermelho';
+        faixa.innerHTML = '⚠️ AGUARDANDO PAGAMENTO';
+        btnPe.className = 'flex-1 py-2 rounded font-bold bg-tnj-vermelho text-white';
+        btnP.className = 'flex-1 py-2 rounded font-bold bg-gray-600';
+    }
+}
+
+// GERA DATA E HORA AUTOMÁTICA
+function pegarDataHora(){
+    const agora = new Date();
+    const data = agora.toLocaleDateString('pt-BR');
+    const hora = agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    return `${data} às ${hora}`;
+}
+
+// PREENCHE TODOS OS DADOS NO COMPROVANTE
+function gerarComprovante(){
+    const nome = document.getElementById('nomeCli').value || 'Cliente';
+    const sobre = document.getElementById('sobreCli').value || '';
+    const email = document.getElementById('emailCli').value || 'Não informado';
+    const fone = document.getElementById('foneCli').value || 'Não informado';
+    const cid = document.getElementById('cidadeCli').value || 'Não informado';
+    const est = document.getElementById('estadoCli').value || '--';
+    const num = document.getElementById('numCasa').value || 'S/N';
+    const serv = document.getElementById('servico').value || 'Outro Serviço';
+    const plano = document.getElementById('planoCli').value || 'Plano Básico';
+    const valor = document.getElementById('valor').value || 'R$ 0,00';
+    const dataHora = pegarDataHora();
+
+    // COLOCANDO NA TELA
+    document.getElementById('mostraNome').innerText = nome;
+    document.getElementById('mostraSobre').innerText = sobre;
+    document.getElementById('mostraEmail').innerText = email;
+    document.getElementById('mostraFone').innerText = fone;
+    document.getElementById('mostraCid').innerText = cid;
+    document.getElementById('mostraEst').innerText = est;
+    document.getElementById('mostraNum').innerText = num;
+    document.getElementById('mostraServico').innerText = serv;
+    document.getElementById('mostraPlano').innerText = plano;
+    document.getElementById('mostraValor').innerText = valor;
+    document.getElementById('dataHora').innerText = dataHora;
+
+    // GERA MENSAGEM PRONTA
+    const situacao = tipoStatus==='pago' ? '✅ PAGAMENTO CONFIRMADO' : '⚠️ FATURA EM ABERTO';
+    const msg = `*${situacao}*\n\nOlá ${nome}! Segue seu comprovante referente a:\n📌 ${serv}\n📋 ${plano}\n💰 Valor: ${valor}\n\n📌 Dados Pix: tvnovajuarez2023@gmail.com\nRafael Edgley Alves Feliciano - PagBank\n\nEmitido em: ${dataHora}\n*TNJ COMPROVANTES - TVNOVAJUAREZ*`;
+
+    document.getElementById('textoMsg').value = msg;
+    document.getElementById('msgAutomatica').classList.remove('hidden');
+}
+
+// BAIXA COMO IMAGEM
+async function baixarImagem(){
+    const comp = document.getElementById('areaComprovante');
+    const img = await html2canvas(comp, {scale:2, useCORS:true});
+    const link = document.createElement('a');
+    link.download = `COMPROVANTE-TNJ-${Date.now()}.png`;
+    link.href = img.toDataURL();
+    link.click();
+}
+
+// ABRE DIRETO NO WHATSAPP
+function enviarWhats(){
+    const fone = document.getElementById('foneCli').value.replace(/\D/g,'');
+    const texto = encodeURIComponent(document.getElementById('textoMsg').value);
+    window.open(`https://wa.me/55${fone}?text=${texto}`, '_blank');
+}
+</script>
+
+</body>
+</html>
