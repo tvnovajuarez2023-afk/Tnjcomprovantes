@@ -1,232 +1,1193 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TNJ Comprovantes - tvnovajuarez</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        tnj: { azul:'#1a237e', dourado:'#ffc107', escuro:'#0a0a0a', verde:'#059669', vermelho:'#dc2626' }
-                    },
-                    fontFamily: { principal: ['Arial', 'sans-serif'] }
-                }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>tnjcomprovantes - Sistema de Comprovantes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #fff;
+            padding: 20px 30px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .header h1 i {
+            color: #f9ca24;
+            margin-right: 10px;
+        }
+        .header span {
+            color: #f9ca24;
+        }
+        .header .sub {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        /* Grid */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 900px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
             }
         }
-    </script>
 
-    <style>
-        body{font-family:Arial,sans-serif;background:#111}
-        .comprovante{background:#fff;color:#111;font-family:Arial}
-        @media print{.no-print{display:none}}
+        /* Cards */
+        .card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+            transition: all 0.3s;
+        }
+        .card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-title i {
+            color: #2d6a9f;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .form-group label .required {
+            color: #e74c3c;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: 0.2s;
+            background: #fafbfc;
+        }
+        .form-control:focus {
+            border-color: #2d6a9f;
+            outline: none;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(45, 106, 159, 0.1);
+        }
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23333' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+        }
+        .row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        @media (max-width: 500px) {
+            .row-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: #2d6a9f;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #1e4a75;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(45, 106, 159, 0.3);
+        }
+        .btn-success {
+            background: #27ae60;
+            color: #fff;
+        }
+        .btn-success:hover {
+            background: #1e8449;
+            transform: translateY(-2px);
+        }
+        .btn-danger {
+            background: #e74c3c;
+            color: #fff;
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        .btn-warning {
+            background: #f39c12;
+            color: #fff;
+        }
+        .btn-warning:hover {
+            background: #d68910;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #2d6a9f;
+            color: #2d6a9f;
+        }
+        .btn-outline:hover {
+            background: #2d6a9f;
+            color: #fff;
+        }
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 13px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .btn-group .btn {
+            flex: 1 1 auto;
+        }
+
+        /* Comprovante preview */
+        .comprovante-preview {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .comprovante-preview img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin: 10px 0;
+        }
+        .comprovante-preview .info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+        .comprovante-preview .status-badge {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+        .status-pago {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-nao-pago {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Lista */
+        .table-wrap {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        table th {
+            background: #1a1a2e;
+            color: #fff;
+            padding: 12px 10px;
+            text-align: left;
+            white-space: nowrap;
+        }
+        table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+        table tr:hover {
+            background: #f8f9fa;
+        }
+        .badge-status {
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-pago {
+            background: #d4edda;
+            color: #155724;
+        }
+        .badge-nao-pago {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .actions i {
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: 0.2s;
+        }
+        .actions i.fa-edit {
+            color: #f39c12;
+        }
+        .actions i.fa-edit:hover {
+            color: #d68910;
+        }
+        .actions i.fa-trash-alt {
+            color: #e74c3c;
+        }
+        .actions i.fa-trash-alt:hover {
+            color: #c0392b;
+        }
+        .actions i.fa-download {
+            color: #2d6a9f;
+        }
+        .actions i.fa-download:hover {
+            color: #1e4a75;
+        }
+        .actions i.fa-save {
+            color: #27ae60;
+        }
+        .actions i.fa-save:hover {
+            color: #1e8449;
+        }
+
+        .empty-msg {
+            text-align: center;
+            color: #999;
+            padding: 30px 0;
+            font-size: 16px;
+        }
+
+        /* Pagbank info */
+        .pagbank-info {
+            background: #e8f0fe;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-left: 5px solid #2d6a9f;
+            font-size: 14px;
+        }
+        .pagbank-info strong {
+            color: #1a1a2e;
+        }
+
+        /* Msg automática */
+        .msg-auto {
+            background: #fef9e7;
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 5px solid #f9ca24;
+            margin-top: 15px;
+            font-size: 14px;
+            white-space: pre-wrap;
+            color: #333;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1a1a2e;
+            color: #fff;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            display: none;
+            align-items: center;
+            gap: 12px;
+            z-index: 999;
+            animation: slideUp 0.3s ease;
+        }
+        .toast.show {
+            display: flex;
+        }
+        .toast i {
+            font-size: 22px;
+        }
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        .file-input-wrapper .btn {
+            width: 100%;
+            background: #e2e8f0;
+            color: #333;
+            border: 2px dashed #aaa;
+        }
+        .file-input-wrapper .btn:hover {
+            background: #d0d7e0;
+        }
+        .file-name {
+            margin-top: 5px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Botão salvar na galeria */
+        .btn-save-gallery {
+            background: #8e44ad;
+            color: #fff;
+        }
+        .btn-save-gallery:hover {
+            background: #6c3483;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 22px;
+            }
+            .card {
+                padding: 18px;
+            }
+            .btn {
+                padding: 10px 18px;
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
-<body class="bg-tnj-escuro text-white font-principal min-h-screen py-6">
-
-<div class="container mx-auto px-3 max-w-4xl">
-    <header class="text-center mb-6">
-        <h1 class="text-2xl md:text-3xl font-black text-tnj-dourado">🧾 TNJ COMPROVANTES</h1>
-        <p class="text-sm opacity-80">tvnovajuarez - Rafael Edgley Alves Feliciano</p>
-    </header>
-
-    <div class="grid md:grid-cols-2 gap-6">
-        <!-- FORMULÁRIO DE PREENCHIMENTO -->
-        <div class="bg-gray-800/60 p-5 rounded-lg border border-gray-700 no-print">
-            <h3 class="font-bold text-tnj-dourado mb-4 text-lg">📝 DADOS DO COMPROVANTE</h3>
-
-            <div class="space-y-3">
-                <div class="flex gap-2">
-                    <button onclick="mudarStatus('pago')" id="btnPago" class="flex-1 py-2 rounded font-bold bg-tnj-verde text-white">✅ JÁ PAGO</button>
-                    <button onclick="mudarStatus('pendente')" id="btnPendente" class="flex-1 py-2 rounded font-bold bg-gray-600">⏳ NÃO PAGO</button>
-                </div>
-
-                <hr class="border-gray-700 my-2">
-
-                <div class="grid grid-cols-2 gap-2">
-                    <input type="text" id="nomeCli" placeholder="Nome" class="p-2 rounded bg-gray-900 border border-gray-600">
-                    <input type="text" id="sobreCli" placeholder="Sobrenome" class="p-2 rounded bg-gray-900 border border-gray-600">
-                </div>
-                <input type="email" id="emailCli" placeholder="E-mail" class="w-full p-2 rounded bg-gray-900 border border-gray-600">
-                <input type="text" id="foneCli" placeholder="Telefone / WhatsApp" class="w-full p-2 rounded bg-gray-900 border border-gray-600">
-                
-                <div class="grid grid-cols-3 gap-2">
-                    <input type="text" id="cidadeCli" placeholder="Cidade" class="col-span-2 p-2 rounded bg-gray-900 border border-gray-600">
-                    <input type="text" id="estadoCli" placeholder="UF" maxlength="2" class="p-2 rounded bg-gray-900 border border-gray-600">
-                </div>
-                <input type="text" id="numCasa" placeholder="Número / Complemento" class="w-full p-2 rounded bg-gray-900 border border-gray-600">
-
-                <select id="servico" class="w-full p-2 rounded bg-gray-900 border border-gray-600">
-                    <option value="">Escolha o Serviço Contratado</option>
-                    <option>Serviços IPTV</option>
-                    <option>Serviços TV Nova Juarez</option>
-                    <option>Serviços Vídeos e Fotos Artes</option>
-                    <option>Serviços Divulgações</option>
-                    <option>Serviços Programa na TV</option>
-                    <option>Serviços Comerciais</option>
-                </select>
-                <input type="text" id="planoCli" placeholder="Seu Plano / Descrição" class="w-full p-2 rounded bg-gray-900 border border-gray-600">
-                <input type="text" id="valor" placeholder="Valor R$ 0,00" class="w-full p-2 rounded bg-gray-900 border border-gray-600 text-lg font-bold">
-
-                <hr class="border-gray-700 my-2">
-
-                <button onclick="gerarComprovante()" class="w-full py-3 bg-tnj-dourado text-black font-bold rounded text-lg hover:brightness-110">
-                    🖼️ GERAR COMPROVANTE
-                </button>
-                <button onclick="baixarImagem()" class="w-full py-2 bg-tnj-azul rounded font-bold hover:bg-tnj-claro">
-                    ⬇️ BAIXAR FOTO PARA WHATSAPP
-                </button>
-                <button onclick="enviarWhats()" class="w-full py-2 bg-green-700 rounded font-bold hover:bg-green-600">
-                    💬 ABRIR NO WHATSAPP
-                </button>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div>
+                <h1><i class="fas fa-receipt"></i> tnj<span>comprovantes</span></h1>
+                <div class="sub">Sistema profissional de geração e gestão de comprovantes</div>
             </div>
-        </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span style="font-size: 14px; background: rgba(255,255,255,0.1); padding: 6px 15px; border-radius: 30px;">
+                    <i class="fas fa-user-shield"></i> Admin
+                </span>
+                <span style="font-size: 13px; opacity: 0.7;">
+                    <i class="fas fa-calendar-alt"></i> <span id="dataAtual"></span>
+                </span>
+            </div>
+        </header>
 
-        <!-- ÁREA DO COMPROVANTE PRONTO -->
-        <div>
-            <h3 class="font-bold text-tnj-dourado mb-4 text-lg text-center">👁️ PRÉ-VISUALIZAÇÃO</h3>
-            
-            <div id="areaComprovante" class="comprovante w-full max-w-[380px] mx-auto rounded-xl overflow-hidden shadow-2xl">
-                <!-- CABEÇALHO -->
-                <div class="bg-gradient-to-r from-tnj-azul to-tnj-claro text-white p-4 text-center">
-                    <h2 class="text-xl font-black">SUA FATURA DA TVNOVAJUAREZ</h2>
-                    <p class="text-xs opacity-90">TNJ COMPROVANTES</p>
+        <!-- Grid Principal -->
+        <div class="grid-2">
+            <!-- Coluna Esquerda: Formulário -->
+            <div>
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-pen-alt"></i> Novo Comprovante</div>
+                    <form id="formComprovante">
+                        <input type="hidden" id="editId" value="">
+
+                        <!-- Dados do Cliente -->
+                        <div class="row-2">
+                            <div class="form-group">
+                                <label>Nome <span class="required">*</span></label>
+                                <input type="text" class="form-control" id="nome" placeholder="Nome" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Sobrenome</label>
+                                <input type="text" class="form-control" id="sobrenome" placeholder="Sobrenome">
+                            </div>
+                        </div>
+                        <div class="row-2">
+                            <div class="form-group">
+                                <label>Email <span class="required">*</span></label>
+                                <input type="email" class="form-control" id="email" placeholder="email@exemplo.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Telefone</label>
+                                <input type="text" class="form-control" id="telefone" placeholder="(00) 00000-0000">
+                            </div>
+                        </div>
+                        <div class="row-2">
+                            <div class="form-group">
+                                <label>Usuário</label>
+                                <input type="text" class="form-control" id="usuario" placeholder="Usuário">
+                            </div>
+                            <div class="form-group">
+                                <label>Senha</label>
+                                <input type="text" class="form-control" id="senha" placeholder="Senha">
+                            </div>
+                        </div>
+
+                        <!-- Serviço Contratado -->
+                        <div class="form-group">
+                            <label>Serviço Contratado <span class="required">*</span></label>
+                            <select class="form-control" id="servico" required>
+                                <option value="">Selecione...</option>
+                                <option value="Clientes IPTV">Clientes IPTV</option>
+                                <option value="Divulgações">Divulgações</option>
+                                <option value="IPTV Revendas">IPTV Revendas</option>
+                                <option value="Revendas Master">Revendas Master</option>
+                                <option value="Revendas ADM">Revendas ADM</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>URL do Serviço</label>
+                            <input type="url" class="form-control" id="urlServico" placeholder="https://...">
+                        </div>
+
+                        <!-- Status Pagamento -->
+                        <div class="form-group">
+                            <label>Status de Pagamento <span class="required">*</span></label>
+                            <select class="form-control" id="status" required>
+                                <option value="pago">Pago</option>
+                                <option value="nao_pago">Não Pago</option>
+                            </select>
+                        </div>
+
+                        <!-- Upload Foto -->
+                        <div class="form-group">
+                            <label>Foto do Comprovante</label>
+                            <div class="file-input-wrapper">
+                                <button type="button" class="btn" style="width:100%;"><i class="fas fa-upload"></i> Selecionar imagem</button>
+                                <input type="file" id="fotoInput" accept="image/*">
+                            </div>
+                            <div class="file-name" id="fileNome">Nenhum arquivo selecionado</div>
+                            <div id="previewFoto" style="margin-top:10px;"></div>
+                        </div>
+
+                        <!-- Dados de Pagamento (fixo) -->
+                        <div class="pagbank-info">
+                            <strong><i class="fas fa-university"></i> Dados de Pagamento</strong><br>
+                            <span><strong>Banco:</strong> Pagbank</span><br>
+                            <span><strong>Chave Pix:</strong> tvnovajuarez2023@gmail.com</span><br>
+                            <span><strong>Nome:</strong> Rafael Edgley Alves Feliciano</span>
+                        </div>
+
+                        <!-- Botões -->
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Salvar Comprovante</button>
+                            <button type="button" class="btn btn-success" id="btnGerarComprovante"><i class="fas fa-file-alt"></i> Gerar Comprovante</button>
+                            <button type="reset" class="btn btn-outline" id="btnCancelar"><i class="fas fa-times"></i> Cancelar</button>
+                        </div>
+                    </form>
                 </div>
 
-                <!-- STATUS -->
-                <div id="faixaStatus" class="text-center py-3 font-black text-xl text-white bg-tnj-verde">
-                    ✅ PAGAMENTO CONFIRMADO
-                </div>
-
-                <!-- DADOS BANCÁRIOS -->
-                <div class="bg-gray-50 p-3 text-xs border-b">
-                    <p class="font-bold text-tnj-azul">📌 DADOS PARA PAGAMENTO</p>
-                    <p>Banco: PagBank</p>
-                    <p>Pix: <strong>tvnovajuarez2023@gmail.com</strong></p>
-                    <p>Nome: Rafael Edgley Alves Feliciano</p>
-                    <p>Empresa: TV Nova Juarez</p>
-                </div>
-
-                <!-- DADOS DO CLIENTE -->
-                <div class="p-4 text-sm space-y-1">
-                    <p class="font-bold border-b pb-1">👤 DADOS DO CLIENTE</p>
-                    <p>Nome: <span id="mostraNome">-</span> <span id="mostraSobre">-</span></p>
-                    <p>E-mail: <span id="mostraEmail">-</span></p>
-                    <p>Telefone: <span id="mostraFone">-</span></p>
-                    <p>Endereço: <span id="mostraCid">-</span>/<span id="mostraEst">-</span>, Nº <span id="mostraNum">-</span></p>
-
-                    <p class="font-bold border-b pb-1 mt-3">📋 SERVIÇO CONTRATADO</p>
-                    <p>Serviço: <span id="mostraServico">-</span></p>
-                    <p>Plano: <span id="mostraPlano">-</span></p>
-
-                    <div class="mt-4 text-center">
-                        <p class="text-xs">Valor Total</p>
-                        <p id="mostraValor" class="text-2xl font-black text-tnj-azul">R$ 0,00</p>
+                <!-- Comprovante Gerado / Mensagem -->
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-print"></i> Visualização do Comprovante</div>
+                    <div id="comprovantePreview" class="comprovante-preview">
+                        <i class="fas fa-image" style="font-size: 48px; color: #ccc; margin-bottom: 10px;"></i>
+                        <p style="color: #999;">Nenhum comprovante gerado ainda.</p>
+                        <p style="font-size: 13px; color: #aaa;">Preencha o formulário e clique em "Gerar Comprovante"</p>
                     </div>
-
-                    <div class="mt-4 pt-2 border-t text-center text-xs opacity-70">
-                        <p>Emitido em: <strong id="dataHora"></strong></p>
-                        <p>TNJ COMPROVANTES • tvnovajuarez</p>
+                    <!-- Botões -->
+                    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-warning" id="btnEnviarMsg"><i class="fas fa-paper-plane"></i> Enviar Mensagem</button>
+                        <button class="btn btn-primary" id="btnBaixarComprovante"><i class="fas fa-download"></i> Baixar</button>
+                        <button class="btn btn-save-gallery" id="btnSalvarGaleria"><i class="fas fa-images"></i> Salvar na Galeria</button>
+                    </div>
+                    <!-- Área da msg automática -->
+                    <div id="msgAutoArea" class="msg-auto" style="display:none;">
+                        <i class="fas fa-comment-dots" style="margin-right:8px;"></i> <strong>Mensagem Automática:</strong>
+                        <div id="conteudoMsg"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- MENSAGEM AUTOMÁTICA -->
-            <div id="msgAutomatica" class="mt-4 bg-gray-800 p-3 rounded text-xs hidden no-print">
-                <p class="font-bold text-tnj-dourado mb-1">📤 MENSAGEM PRONTA:</p>
-                <textarea id="textoMsg" class="w-full h-28 p-2 rounded bg-gray-900 text-white border border-gray-700 resize-none"></textarea>
+            <!-- Coluna Direita: Lista de Comprovantes -->
+            <div>
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-list"></i> Comprovantes Salvos</div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Serviço</th>
+                                    <th>Status</th>
+                                    <th style="text-align:center;">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelaCorpo">
+                                <!-- carregado via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="emptyMsg" class="empty-msg">
+                        <i class="fas fa-inbox" style="font-size: 30px; display:block; margin-bottom:10px;"></i>
+                        Nenhum comprovante cadastrado.
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-let tipoStatus = 'pago';
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle" style="color: #2ecc71;"></i>
+        <span id="toastMsg">Operação realizada com sucesso!</span>
+    </div>
 
-// ALTERA ENTRE PAGO E PENDENTE
-function mudarStatus(tipo){
-    tipoStatus = tipo;
-    const faixa = document.getElementById('faixaStatus');
-    const btnP = document.getElementById('btnPago');
-    const btnPe = document.getElementById('btnPendente');
+    <script>
+        // ========== DADOS ==========
+        let comprovantes = JSON.parse(localStorage.getItem('tnjcomprovantes')) || [];
+        let currentEditId = null;
 
-    if(tipo==='pago'){
-        faixa.className = 'text-center py-3 font-black text-xl text-white bg-tnj-verde';
-        faixa.innerHTML = '✅ PAGAMENTO CONFIRMADO';
-        btnP.className = 'flex-1 py-2 rounded font-bold bg-tnj-verde text-white';
-        btnPe.className = 'flex-1 py-2 rounded font-bold bg-gray-600';
-    }else{
-        faixa.className = 'text-center py-3 font-black text-xl text-white bg-tnj-vermelho';
-        faixa.innerHTML = '⚠️ AGUARDANDO PAGAMENTO';
-        btnPe.className = 'flex-1 py-2 rounded font-bold bg-tnj-vermelho text-white';
-        btnP.className = 'flex-1 py-2 rounded font-bold bg-gray-600';
-    }
-}
+        // ========== DOM ==========
+        const form = document.getElementById('formComprovante');
+        const editIdInput = document.getElementById('editId');
+        const nomeInput = document.getElementById('nome');
+        const sobrenomeInput = document.getElementById('sobrenome');
+        const emailInput = document.getElementById('email');
+        const telefoneInput = document.getElementById('telefone');
+        const usuarioInput = document.getElementById('usuario');
+        const senhaInput = document.getElementById('senha');
+        const servicoInput = document.getElementById('servico');
+        const urlServicoInput = document.getElementById('urlServico');
+        const statusInput = document.getElementById('status');
+        const fotoInput = document.getElementById('fotoInput');
+        const fileNome = document.getElementById('fileNome');
+        const previewFoto = document.getElementById('previewFoto');
+        const comprovantePreview = document.getElementById('comprovantePreview');
+        const msgAutoArea = document.getElementById('msgAutoArea');
+        const conteudoMsg = document.getElementById('conteudoMsg');
+        const tabelaCorpo = document.getElementById('tabelaCorpo');
+        const emptyMsg = document.getElementById('emptyMsg');
 
-// GERA DATA E HORA AUTOMÁTICA
-function pegarDataHora(){
-    const agora = new Date();
-    const data = agora.toLocaleDateString('pt-BR');
-    const hora = agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-    return `${data} às ${hora}`;
-}
+        // Data atual
+        document.getElementById('dataAtual').textContent = new Date().toLocaleDateString('pt-BR');
 
-// PREENCHE TODOS OS DADOS NO COMPROVANTE
-function gerarComprovante(){
-    const nome = document.getElementById('nomeCli').value || 'Cliente';
-    const sobre = document.getElementById('sobreCli').value || '';
-    const email = document.getElementById('emailCli').value || 'Não informado';
-    const fone = document.getElementById('foneCli').value || 'Não informado';
-    const cid = document.getElementById('cidadeCli').value || 'Não informado';
-    const est = document.getElementById('estadoCli').value || '--';
-    const num = document.getElementById('numCasa').value || 'S/N';
-    const serv = document.getElementById('servico').value || 'Outro Serviço';
-    const plano = document.getElementById('planoCli').value || 'Plano Básico';
-    const valor = document.getElementById('valor').value || 'R$ 0,00';
-    const dataHora = pegarDataHora();
+        // ========== FUNÇÕES ==========
+        function toast(msg, type = 'success') {
+            const el = document.getElementById('toast');
+            const icon = el.querySelector('i');
+            const span = document.getElementById('toastMsg');
+            span.textContent = msg;
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+                icon.style.color = '#2ecc71';
+            } else {
+                icon.className = 'fas fa-exclamation-circle';
+                icon.style.color = '#e74c3c';
+            }
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 3000);
+        }
 
-    // COLOCANDO NA TELA
-    document.getElementById('mostraNome').innerText = nome;
-    document.getElementById('mostraSobre').innerText = sobre;
-    document.getElementById('mostraEmail').innerText = email;
-    document.getElementById('mostraFone').innerText = fone;
-    document.getElementById('mostraCid').innerText = cid;
-    document.getElementById('mostraEst').innerText = est;
-    document.getElementById('mostraNum').innerText = num;
-    document.getElementById('mostraServico').innerText = serv;
-    document.getElementById('mostraPlano').innerText = plano;
-    document.getElementById('mostraValor').innerText = valor;
-    document.getElementById('dataHora').innerText = dataHora;
+        function gerarId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+        }
 
-    // GERA MENSAGEM PRONTA
-    const situacao = tipoStatus==='pago' ? '✅ PAGAMENTO CONFIRMADO' : '⚠️ FATURA EM ABERTO';
-    const msg = `*${situacao}*\n\nOlá ${nome}! Segue seu comprovante referente a:\n📌 ${serv}\n📋 ${plano}\n💰 Valor: ${valor}\n\n📌 Dados Pix: tvnovajuarez2023@gmail.com\nRafael Edgley Alves Feliciano - PagBank\n\nEmitido em: ${dataHora}\n*TNJ COMPROVANTES - TVNOVAJUAREZ*`;
+        // Converter imagem para base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
 
-    document.getElementById('textoMsg').value = msg;
-    document.getElementById('msgAutomatica').classList.remove('hidden');
-}
+        // Salvar no localStorage
+        function salvarDados() {
+            localStorage.setItem('tnjcomprovantes', JSON.stringify(comprovantes));
+            renderizarTabela();
+        }
 
-// BAIXA COMO IMAGEM
-async function baixarImagem(){
-    const comp = document.getElementById('areaComprovante');
-    const img = await html2canvas(comp, {scale:2, useCORS:true});
-    const link = document.createElement('a');
-    link.download = `COMPROVANTE-TNJ-${Date.now()}.png`;
-    link.href = img.toDataURL();
-    link.click();
-}
+        // Renderizar tabela
+        function renderizarTabela() {
+            if (comprovantes.length === 0) {
+                tabelaCorpo.innerHTML = '';
+                emptyMsg.style.display = 'block';
+                return;
+            }
+            emptyMsg.style.display = 'none';
+            let html = '';
+            comprovantes.forEach((c, index) => {
+                const statusClass = c.status === 'pago' ? 'badge-pago' : 'badge-nao-pago';
+                const statusLabel = c.status === 'pago' ? 'Pago' : 'Não Pago';
+                const nomeCompleto = c.nome + (c.sobrenome ? ' ' + c.sobrenome : '');
+                html += `
+                    <tr>
+                        <td><strong>${nomeCompleto}</strong><br><small style="color:#888;">${c.email}</small></td>
+                        <td>${c.servico}</td>
+                        <td><span class="badge-status ${statusClass}">${statusLabel}</span></td>
+                        <td class="actions" style="text-align:center; white-space:nowrap;">
+                            <i class="fas fa-edit" onclick="editarComprovante('${c.id}')" title="Editar"></i>
+                            <i class="fas fa-trash-alt" onclick="excluirComprovante('${c.id}')" title="Excluir"></i>
+                            <i class="fas fa-download" onclick="baixarComprovante('${c.id}')" title="Baixar"></i>
+                            <i class="fas fa-eye" onclick="visualizarComprovante('${c.id}')" title="Visualizar"></i>
+                            <i class="fas fa-save" onclick="salvarNaGaleriaPorId('${c.id}')" title="Salvar na Galeria"></i>
+                        </td>
+                    </tr>
+                `;
+            });
+            tabelaCorpo.innerHTML = html;
+        }
 
-// ABRE DIRETO NO WHATSAPP
-function enviarWhats(){
-    const fone = document.getElementById('foneCli').value.replace(/\D/g,'');
-    const texto = encodeURIComponent(document.getElementById('textoMsg').value);
-    window.open(`https://wa.me/55${fone}?text=${texto}`, '_blank');
-}
-</script>
+        // ========== CRUD ==========
+        function editarComprovante(id) {
+            const c = comprovantes.find(item => item.id === id);
+            if (!c) return;
+            currentEditId = id;
+            editIdInput.value = id;
+            nomeInput.value = c.nome || '';
+            sobrenomeInput.value = c.sobrenome || '';
+            emailInput.value = c.email || '';
+            telefoneInput.value = c.telefone || '';
+            usuarioInput.value = c.usuario || '';
+            senhaInput.value = c.senha || '';
+            servicoInput.value = c.servico || '';
+            urlServicoInput.value = c.urlServico || '';
+            statusInput.value = c.status || 'pago';
+            // Foto
+            if (c.foto) {
+                previewFoto.innerHTML = `<img src="${c.foto}" style="max-width:100%; max-height:150px; border-radius:8px;">`;
+                fileNome.textContent = 'Imagem carregada';
+            } else {
+                previewFoto.innerHTML = '';
+                fileNome.textContent = 'Nenhum arquivo selecionado';
+            }
+            fotoInput.value = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            toast('Editando comprovante. Altere e salve.', 'success');
+        }
 
+        function excluirComprovante(id) {
+            if (!confirm('Deseja realmente excluir este comprovante?')) return;
+            comprovantes = comprovantes.filter(c => c.id !== id);
+            salvarDados();
+            toast('Comprovante excluído!', 'success');
+            if (currentEditId === id) {
+                limparFormulario();
+            }
+        }
+
+        function visualizarComprovante(id) {
+            const c = comprovantes.find(item => item.id === id);
+            if (!c) return;
+            let html = '';
+            if (c.foto) {
+                html += `<img src="${c.foto}" alt="Comprovante">`;
+            } else {
+                html += `<i class="fas fa-image" style="font-size:48px; color:#ccc;"></i>`;
+            }
+            const statusClass = c.status === 'pago' ? 'status-pago' : 'status-nao-pago';
+            const statusLabel = c.status === 'pago' ? 'PAGO' : 'NÃO PAGO';
+            const nomeCompleto = c.nome + (c.sobrenome ? ' ' + c.sobrenome : '');
+            html += `
+                <div class="info">
+                    <strong>${nomeCompleto}</strong> | ${c.email}<br>
+                    <strong>Serviço:</strong> ${c.servico} ${c.urlServico ? '| <a href="'+c.urlServico+'" target="_blank">Link</a>' : ''}<br>
+                    <span class="status-badge ${statusClass}">${statusLabel}</span>
+                </div>
+            `;
+            comprovantePreview.innerHTML = html;
+            gerarMsgAuto(c);
+            toast('Comprovante carregado na visualização.', 'success');
+        }
+
+        function baixarComprovante(id) {
+            const c = comprovantes.find(item => item.id === id);
+            if (!c) return toast('Comprovante não encontrado!', 'error');
+            const canvas = document.createElement('canvas');
+            canvas.width = 800;
+            canvas.height = 600;
+            const ctx = canvas.getContext('2d');
+
+            const grad = ctx.createLinearGradient(0, 0, 800, 600);
+            grad.addColorStop(0, '#f5f7fa');
+            grad.addColorStop(1, '#e6ecf5');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 800, 600);
+
+            ctx.strokeStyle = '#2d6a9f';
+            ctx.lineWidth = 8;
+            ctx.strokeRect(20, 20, 760, 560);
+
+            ctx.fillStyle = '#1a1a2e';
+            ctx.font = 'bold 30px "Segoe UI", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('tnjcomprovantes', 400, 70);
+            ctx.fillStyle = '#2d6a9f';
+            ctx.font = '18px "Segoe UI", sans-serif';
+            ctx.fillText('COMPROVANTE DE PAGAMENTO', 400, 105);
+
+            ctx.beginPath();
+            ctx.moveTo(60, 120);
+            ctx.lineTo(740, 120);
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#333';
+            ctx.font = '16px "Segoe UI", sans-serif';
+            const linhas = [
+                `Cliente: ${c.nome} ${c.sobrenome || ''}`,
+                `Email: ${c.email}`,
+                `Telefone: ${c.telefone || 'Não informado'}`,
+                `Usuário: ${c.usuario || 'Não informado'}`,
+                `Serviço: ${c.servico}`,
+                `URL: ${c.urlServico || 'Não informado'}`,
+                `Status: ${c.status === 'pago' ? 'PAGO' : 'NÃO PAGO'}`,
+                `Data: ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')}`,
+            ];
+            let y = 160;
+            linhas.forEach(texto => {
+                ctx.fillText(texto, 60, y);
+                y += 35;
+            });
+
+            ctx.fillStyle = '#2d6a9f';
+            ctx.font = 'bold 16px "Segoe UI", sans-serif';
+            ctx.fillText('Dados de Pagamento:', 60, y + 10);
+            ctx.fillStyle = '#333';
+            ctx.font = '15px "Segoe UI", sans-serif';
+            ctx.fillText('Banco: Pagbank', 60, y + 40);
+            ctx.fillText('Chave Pix: tvnovajuarez2023@gmail.com', 60, y + 65);
+            ctx.fillText('Nome: Rafael Edgley Alves Feliciano', 60, y + 90);
+
+            ctx.fillStyle = '#999';
+            ctx.font = '13px "Segoe UI", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Sistema tnjcomprovantes - Comprovante gerado automaticamente', 400, 560);
+
+            if (c.foto) {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.src = c.foto;
+                img.onload = function() {
+                    const ratio = img.width / img.height;
+                    let w = 200,
+                        h = 200 / ratio;
+                    if (h > 200) { h = 200;
+                        w = 200 * ratio; }
+                    ctx.drawImage(img, 550, 140, w, h);
+                    baixarCanvas(canvas, c);
+                };
+                img.onerror = function() {
+                    baixarCanvas(canvas, c);
+                };
+            } else {
+                baixarCanvas(canvas, c);
+            }
+        }
+
+        function baixarCanvas(canvas, c) {
+            const link = document.createElement('a');
+            link.download = `comprovante_${c.nome}_${c.id}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            toast('Comprovante baixado!', 'success');
+        }
+
+        // ========== SALVAR NA GALERIA ==========
+        function salvarNaGaleriaPorId(id) {
+            const c = comprovantes.find(item => item.id === id);
+            if (!c) return toast('Comprovante não encontrado!', 'error');
+            gerarCanvasComprovante(c, function(canvas) {
+                // Tenta salvar usando a API nativa (mobile) ou faz download
+                if (navigator.share && navigator.canShare) {
+                    // Em dispositivos móveis, pode compartilhar como imagem
+                    canvas.toBlob(function(blob) {
+                        const file = new File([blob], `comprovante_${c.nome}.png`, { type: 'image/png' });
+                        if (navigator.canShare({ files: [file] })) {
+                            navigator.share({
+                                title: 'Comprovante',
+                                files: [file]
+                            }).then(() => {
+                                toast('Comprovante salvo na galeria via compartilhamento!', 'success');
+                            }).catch(() => {
+                                // Fallback: download
+                                baixarCanvas(canvas, c);
+                            });
+                        } else {
+                            baixarCanvas(canvas, c);
+                        }
+                    });
+                } else {
+                    // Fallback: download
+                    baixarCanvas(canvas, c);
+                }
+            });
+        }
+
+        function gerarCanvasComprovante(c, callback) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 800;
+            canvas.height = 600;
+            const ctx = canvas.getContext('2d');
+
+            const grad = ctx.createLinearGradient(0, 0, 800, 600);
+            grad.addColorStop(0, '#f5f7fa');
+            grad.addColorStop(1, '#e6ecf5');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 800, 600);
+
+            ctx.strokeStyle = '#2d6a9f';
+            ctx.lineWidth = 8;
+            ctx.strokeRect(20, 20, 760, 560);
+
+            ctx.fillStyle = '#1a1a2e';
+            ctx.font = 'bold 30px "Segoe UI", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('tnjcomprovantes', 400, 70);
+            ctx.fillStyle = '#2d6a9f';
+            ctx.font = '18px "Segoe UI", sans-serif';
+            ctx.fillText('COMPROVANTE DE PAGAMENTO', 400, 105);
+
+            ctx.beginPath();
+            ctx.moveTo(60, 120);
+            ctx.lineTo(740, 120);
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#333';
+            ctx.font = '16px "Segoe UI", sans-serif';
+            const linhas = [
+                `Cliente: ${c.nome} ${c.sobrenome || ''}`,
+                `Email: ${c.email}`,
+                `Telefone: ${c.telefone || 'Não informado'}`,
+                `Usuário: ${c.usuario || 'Não informado'}`,
+                `Serviço: ${c.servico}`,
+                `URL: ${c.urlServico || 'Não informado'}`,
+                `Status: ${c.status === 'pago' ? 'PAGO' : 'NÃO PAGO'}`,
+                `Data: ${new Date().toLocaleDateString('pt-BR')} ${new Date().toLocaleTimeString('pt-BR')}`,
+            ];
+            let y = 160;
+            linhas.forEach(texto => {
+                ctx.fillText(texto, 60, y);
+                y += 35;
+            });
+
+            ctx.fillStyle = '#2d6a9f';
+            ctx.font = 'bold 16px "Segoe UI", sans-serif';
+            ctx.fillText('Dados de Pagamento:', 60, y + 10);
+            ctx.fillStyle = '#333';
+            ctx.font = '15px "Segoe UI", sans-serif';
+            ctx.fillText('Banco: Pagbank', 60, y + 40);
+            ctx.fillText('Chave Pix: tvnovajuarez2023@gmail.com', 60, y + 65);
+            ctx.fillText('Nome: Rafael Edgley Alves Feliciano', 60, y + 90);
+
+            ctx.fillStyle = '#999';
+            ctx.font = '13px "Segoe UI", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Sistema tnjcomprovantes - Comprovante gerado automaticamente', 400, 560);
+
+            if (c.foto) {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.src = c.foto;
+                img.onload = function() {
+                    const ratio = img.width / img.height;
+                    let w = 200,
+                        h = 200 / ratio;
+                    if (h > 200) { h = 200;
+                        w = 200 * ratio; }
+                    ctx.drawImage(img, 550, 140, w, h);
+                    callback(canvas);
+                };
+                img.onerror = function() {
+                    callback(canvas);
+                };
+            } else {
+                callback(canvas);
+            }
+        }
+
+        // ========== GERAR COMPROVANTE ==========
+        function gerarComprovante() {
+            const nome = nomeInput.value.trim();
+            const email = emailInput.value.trim();
+            const servico = servicoInput.value;
+            const status = statusInput.value;
+
+            if (!nome || !email || !servico) {
+                toast('Preencha Nome, Email e Serviço!', 'error');
+                return;
+            }
+
+            const comprovante = {
+                id: editIdInput.value || gerarId(),
+                nome: nome,
+                sobrenome: sobrenomeInput.value.trim(),
+                email: email,
+                telefone: telefoneInput.value.trim(),
+                usuario: usuarioInput.value.trim(),
+                senha: senhaInput.value.trim(),
+                servico: servico,
+                urlServico: urlServicoInput.value.trim(),
+                status: status,
+                foto: ''
+            };
+
+            const file = fotoInput.files[0];
+            if (file) {
+                fileToBase64(file).then(base64 => {
+                    comprovante.foto = base64;
+                    salvarOuAtualizar(comprovante);
+                    atualizarPreview(comprovante);
+                }).catch(() => {
+                    toast('Erro ao ler a imagem!', 'error');
+                });
+            } else {
+                const existing = comprovantes.find(c => c.id === comprovante.id);
+                if (existing && existing.foto) {
+                    comprovante.foto = existing.foto;
+                }
+                salvarOuAtualizar(comprovante);
+                atualizarPreview(comprovante);
+            }
+        }
+
+        function salvarOuAtualizar(comp) {
+            const index = comprovantes.findIndex(c => c.id === comp.id);
+            if (index !== -1) {
+                comprovantes[index] = comp;
+            } else {
+                comprovantes.push(comp);
+            }
+            salvarDados();
+            toast('Comprovante salvo com sucesso!', 'success');
+            gerarMsgAuto(comp);
+            if (!editIdInput.value) {
+                // limpar campos sensíveis, mas manter para continuar
+            }
+            currentEditId = null;
+            editIdInput.value = '';
+        }
+
+        function atualizarPreview(comp) {
+            let html = '';
+            if (comp.foto) {
+                html += `<img src="${comp.foto}" alt="Comprovante">`;
+            } else {
+                html += `<i class="fas fa-image" style="font-size:48px; color:#ccc;"></i>`;
+            }
+            const statusClass = comp.status === 'pago' ? 'status-pago' : 'status-nao-pago';
+            const statusLabel = comp.status === 'pago' ? 'PAGO' : 'NÃO PAGO';
+            const nomeCompleto = comp.nome + (comp.sobrenome ? ' ' + comp.sobrenome : '');
+            html += `
+                <div class="info">
+                    <strong>${nomeCompleto}</strong> | ${comp.email}<br>
+                    <strong>Serviço:</strong> ${comp.servico} ${comp.urlServico ? '| <a href="'+comp.urlServico+'" target="_blank">Link</a>' : ''}<br>
+                    <span class="status-badge ${statusClass}">${statusLabel}</span>
+                </div>
+            `;
+            comprovantePreview.innerHTML = html;
+        }
+
+        function gerarMsgAuto(comp) {
+            const statusText = comp.status === 'pago' ? 'PAGO' : 'NÃO PAGO';
+            const emoji = comp.status === 'pago' ? '✅' : '❌';
+            const nomeCompleto = comp.nome + (comp.sobrenome ? ' ' + comp.sobrenome : '');
+            let msg = `Olá ${nomeCompleto},\n\n`;
+            msg += `Seu comprovante de pagamento referente ao serviço "${comp.servico}" foi ${statusText}.\n`;
+            msg += `Dados do cliente:\n`;
+            msg += `Email: ${comp.email}\n`;
+            msg += `Telefone: ${comp.telefone || 'Não informado'}\n`;
+            msg += `Usuário: ${comp.usuario || 'Não informado'}\n`;
+            msg += `Senha: ${comp.senha || 'Não informado'}\n`;
+            if (comp.urlServico) msg += `URL do serviço: ${comp.urlServico}\n`;
+            msg += `\nBanco: Pagbank\n`;
+            msg += `Chave Pix: tvnovajuarez2023@gmail.com\n`;
+            msg += `Nome: Rafael Edgley Alves Feliciano\n`;
+            msg += `\n${emoji} Status: ${statusText}\n`;
+            msg += `Data: ${new Date().toLocaleString('pt-BR')}\n\n`;
+            msg += `Atenciosamente,\nSistema tnjcomprovantes`;
+
+            conteudoMsg.textContent = msg;
+            msgAutoArea.style.display = 'block';
+        }
+
+        // ========== EVENTOS ==========
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            gerarComprovante();
+        });
+
+        document.getElementById('btnGerarComprovante').addEventListener('click', function() {
+            gerarComprovante();
+        });
+
+        document.getElementById('btnEnviarMsg').addEventListener('click', function() {
+            const msg = conteudoMsg.textContent;
+            if (!msg || msg.trim() === '') {
+                toast('Gere um comprovante primeiro!', 'error');
+                return;
+            }
+            navigator.clipboard.writeText(msg).then(() => {
+                toast('Mensagem copiada para a área de transferência!', 'success');
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = msg;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                toast('Mensagem copiada para a área de transferência!', 'success');
+            });
+        });
+
+        document.getElementById('btnBaixarComprovante').addEventListener('click', function() {
+            const previewText = comprovantePreview.textContent;
+            if (previewText.includes('Nenhum comprovante gerado')) {
+                toast('Gere um comprovante primeiro!', 'error');
+                return;
+            }
+            let id = editIdInput.value;
+            if (!id) {
+                if (comprovantes.length === 0) {
+                    toast('Nenhum comprovante salvo!', 'error');
+                    return;
+                }
+                id = comprovantes[comprovantes.length - 1].id;
+            }
+            baixarComprovante(id);
+        });
+
+        document.getElementById('btnSalvarGaleria').addEventListener('click', function() {
+            const previewText = comprovantePreview.textContent;
+            if (previewText.includes('Nenhum comprovante gerado')) {
+                toast('Gere um comprovante primeiro!', 'error');
+                return;
+            }
+            let id = editIdInput.value;
+            if (!id) {
+                if (comprovantes.length === 0) {
+                    toast('Nenhum comprovante salvo!', 'error');
+                    return;
+                }
+                id = comprovantes[comprovantes.length - 1].id;
+            }
+            salvarNaGaleriaPorId(id);
+        });
+
+        document.getElementById('btnCancelar').addEventListener('click', function() {
+            limparFormulario();
+            msgAutoArea.style.display = 'none';
+            comprovantePreview.innerHTML = `
+                <i class="fas fa-image" style="font-size:48px; color:#ccc; margin-bottom:10px;"></i>
+                <p style="color:#999;">Nenhum comprovante gerado ainda.</p>
+                <p style="font-size:13px; color:#aaa;">Preencha o formulário e clique em "Gerar Comprovante"</p>
+            `;
+            toast('Formulário limpo.', 'success');
+        });
+
+        function limparFormulario() {
+            form.reset();
+            editIdInput.value = '';
+            currentEditId = null;
+            previewFoto.innerHTML = '';
+            fileNome.textContent = 'Nenhum arquivo selecionado';
+            fotoInput.value = '';
+        }
+
+        fotoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                fileNome.textContent = file.name;
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    previewFoto.innerHTML = `<img src="${ev.target.result}" style="max-width:100%; max-height:200px; border-radius:8px; border:1px solid #ddd;">`;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                fileNome.textContent = 'Nenhum arquivo selecionado';
+                previewFoto.innerHTML = '';
+            }
+        });
+
+        // ========== INIT ==========
+        renderizarTabela();
+        if (comprovantes.length > 0) {
+            const ultimo = comprovantes[comprovantes.length - 1];
+            visualizarComprovante(ultimo.id);
+        }
+
+        console.log('Sistema tnjcomprovantes carregado!');
+    </script>
 </body>
 </html>
